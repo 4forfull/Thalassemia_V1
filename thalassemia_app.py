@@ -3,8 +3,7 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 import os
-from catboost import CatBoostClassifier  # <--- 需要添加
-import joblib
+from catboost import CatBoostClassifier
 
 # Set Page Title
 st.set_page_config(page_title="Thalassemia")
