@@ -2,24 +2,31 @@
 import streamlit as st
 from PIL import Image
 import pandas as pd
+import os
+from catboost import CatBoostClassifier  # <--- 需要添加
 import joblib
 
 # Set Page Title
 st.set_page_config(page_title="Thalassemia")
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 @st.cache_resource
 def load_models():
-    model_main = joblib.load('./catboost_model_smote_thalassemia.pkl')
-    model_sub = joblib.load('./catboost_model_smote_ab.pkl')
+    model_main = CatBoostClassifier()
+    model_main.load_model(os.path.join(BASE_DIR, 'catboost_model_smote_thalassemia.cbm'))
+
+    model_sub = CatBoostClassifier()
+    model_sub.load_model(os.path.join(BASE_DIR, 'catboost_model_smote_ab.cbm'))
     return model_main, model_sub
 
 @st.cache_data
 def load_data():
-    return pd.read_csv('./test.csv')
+    return pd.read_csv(os.path.join(BASE_DIR, 'test.csv'))
 
 @st.cache_data
 def load_image():
-    return Image.open('img.jpg')
+    return Image.open(os.path.join(BASE_DIR, 'img.jpg'))
 
 def predict_thalassemia(model_main, model_sub, input_data):
     predict = model_main.predict([input_data])
